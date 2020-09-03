@@ -12,10 +12,10 @@ const sendWelcomeEmail = (name, email)=>{
         <table style="background-color: #fff;border-collapse:collapse; border: 1px;" width="90%" align="center">
         <tr>
         <td style="background-color: #373373; padding: 20px color: #fff;">
-        <img src="https://static.cdn.responsys.net/i2/responsysimages/kijiji/contentlibrary/campaigns/welcome/fall2018/hero_en.png" width="100%"></td></tr>
+        <img src="https://kuralio-ad-pictures.s3.ca-central-1.amazonaws.com/welcome.png" width="100%"></td></tr>
         <tr>
         <td style="font-size:20px; line-height:1.5; ">
-        <p><strong>ሰላም, <br>እንኳን ወደ ቁራልየው የቁሳቁስ ማሻሻጫ ዌብ ሳይት በደህና መጡ</strong></p>
+        <p><strong>ሰላምታ ከቁራልየው የቁሳቁስ ማሻሻጫ ዌብ ሳይት ይድረሳችሁ</strong></p>
         </td></tr>
         <tr><td>
         <p>አሁን ኢትዮጵያ ውስጥ በማንኛውም ሰዓትና ቦታ የሚፈልጉትን ዕቃ መግዛት፤ መሸጥ፤ መለወጥ ይችላሉ። በቁራልዮ ዌብ ሳይት ላይ በነፃ ያስተዋውቁ፨</p>
