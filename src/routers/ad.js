@@ -64,7 +64,7 @@ router.get('/api/v1/ads', get_all_ads)
 //Get my ads
 router.get('/api/v1/ads/me', auth, get_my_ads )
 //Get ads by Id
-router.get('/api/v1/ads/:id', auth, get_ad_byId )
+router.get('/api/v1/ads/:id',  get_ad_byId )
 //Update my ad
 router.patch('/api/v1/ads/:id', auth, update_my_ads)
 //Delete my ad
