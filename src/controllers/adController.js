@@ -63,6 +63,33 @@ module.exports.get_my_ads = async (req, res)=>{
 
 }
 
+module.exports.get_ad_byId = async (req, res)=>{
+    try{
+        const match = {}
+        const sort ={}
+        if(req.query.category){
+            match.category = req.query.category
+        }
+        if(req.query.location){
+            match.location = req.query.location
+        }
+        if(req.query.sortBy){
+            const parts = req.query.sortBy.split(':')
+            sort[parts[0]]= parts[1]==='desc' ? - 1 : 1
+        }
+        
+        const ad = await Ad.find({_id: req.params.id})
+       // await req.user.populate('ad').execPopulate()
+
+     
+        res.send(ad)
+    
+    }catch(e){
+        res.send(e).status(500)
+    }
+
+}
+
 module.exports.update_my_ads = async (req, res)=>{
     try{
         const allowedUpdate = ['title','category', 'description','deliveryOption','pictures','youtubeVideo','websiteURL', 'location','price','phoneNumber','title']
