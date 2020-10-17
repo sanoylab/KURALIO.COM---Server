@@ -5,7 +5,7 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const Ad = require('../models/ad');
 const auth = require('../middleware/auth')
-const {create_ads, get_all_ads, get_my_ads,update_my_ads, delete_my_ads, upload_ad_picture, show_ad_picture} = require('../controllers/adController')
+const {create_ads, get_all_ads, get_my_ads,get_ad_byId, update_my_ads, delete_my_ads, upload_ad_picture, show_ad_picture} = require('../controllers/adController')
 //Configure Multer
 require('dotenv').config();
 aws.config.update({
@@ -63,6 +63,8 @@ router.get('/api/v1/ads/:id/picture', show_ad_picture)
 router.get('/api/v1/ads', get_all_ads)
 //Get my ads
 router.get('/api/v1/ads/me', auth, get_my_ads )
+//Get ads by Id
+router.get('/api/v1/ads/:id', auth, get_ad_byId )
 //Update my ad
 router.patch('/api/v1/ads/:id', auth, update_my_ads)
 //Delete my ad
