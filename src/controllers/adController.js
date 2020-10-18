@@ -1,151 +1,188 @@
+/** @format */
 
-const sharp = require('sharp');
+const sharp = require("sharp");
 
+const Ad = require("../models/ad");
+module.exports.create_ads = async (req, res) => {
+  try {
+    const ad = new Ad({
+      ...req.body,
+      postedBy: req.user._id,
+    });
+    await ad.save();
+    res.send(ad).status(201);
+  } catch (e) {
+    res.send(e).status(500);
+  }
+};
 
-const Ad = require('../models/ad');
-module.exports.create_ads = async (req, res)=>{
-    try{
-        const ad = new Ad({
-            ...req.body,
-            'postedBy': req.user._id
-        })
-        await ad.save()
-        res.send(ad).status(201)
-    }catch(e){
-        res.send(e).status(500)
+module.exports.get_all_ads = async (req, res) => {
+  try {
+    const ads = await Ad.find({});
+    if (!ads) {
+      res.send().status(404);
     }
-}
+    res.send(ads);
+  } catch (e) {
+    res.send(e).status(500);
+  }
+};
 
-module.exports.get_all_ads = async (req, res)=>{
-    try{
-        const ads = await Ad.find({})
-        if(!ads){
-            res.send().status(404)
-        }
-        res.send(ads)
-    }catch(e){
-        res.send(e).status(500)
+module.exports.get_my_ads = async (req, res) => {
+  try {
+    const match = {};
+    const sort = {};
+    if (req.query.category) {
+      match.category = req.query.category;
     }
-}
-
-module.exports.get_my_ads = async (req, res)=>{
-    try{
-        const match = {}
-        const sort ={}
-        if(req.query.category){
-            match.category = req.query.category
-        }
-        if(req.query.location){
-            match.location = req.query.location
-        }
-        if(req.query.sortBy){
-            const parts = req.query.sortBy.split(':')
-            sort[parts[0]]= parts[1]==='desc' ? - 1 : 1
-        }
-        
-        //const ad = await Ad.find({postedBy: req.user._id})
-        //await req.user.populate('ads').execPopulate()
-
-        await req.user.populate({
-            path:'ads',
-            match,
-            options: {
-                limit: parseInt(req.query.limit),
-                skip: parseInt(req.query.skip),
-                sort
-            }
-        }).execPopulate()
-        res.send(req.user.ads)
-    
-    }catch(e){
-        res.send(e).status(500)
+    if (req.query.location) {
+      match.location = req.query.location;
+    }
+    if (req.query.sortBy) {
+      const parts = req.query.sortBy.split(":");
+      sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
     }
 
-}
+    //const ad = await Ad.find({postedBy: req.user._id})
+    //await req.user.populate('ads').execPopulate()
 
-module.exports.get_ad_byId = async (req, res)=>{
-    try{
-        const match = {}
-        const sort ={}
-        if(req.query.category){
-            match.category = req.query.category
-        }
-        if(req.query.location){
-            match.location = req.query.location
-        }
-        if(req.query.sortBy){
-            const parts = req.query.sortBy.split(':')
-            sort[parts[0]]= parts[1]==='desc' ? - 1 : 1
-        }
-        
-        const ad = await Ad.find({_id: req.params.id})
-       // await req.user.populate('ad').execPopulate()
+    await req.user
+      .populate({
+        path: "ads",
+        match,
+        options: {
+          limit: parseInt(req.query.limit),
+          skip: parseInt(req.query.skip),
+          sort,
+        },
+      })
+      .execPopulate();
+    res.send(req.user.ads);
+  } catch (e) {
+    res.send(e).status(500);
+  }
+};
 
-     
-        res.send(ad)
-    
-    }catch(e){
-        res.send(e).status(500)
+module.exports.get_ad_byId = async (req, res) => {
+  try {
+    const match = {};
+    const sort = {};
+    if (req.query.category) {
+      match.category = req.query.category;
+    }
+    if (req.query.location) {
+      match.location = req.query.location;
+    }
+    if (req.query.sortBy) {
+      const parts = req.query.sortBy.split(":");
+      sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
     }
 
-}
+    const ad = await Ad.find({ _id: req.params.id });
+    // await req.user.populate('ad').execPopulate()
 
-module.exports.update_my_ads = async (req, res)=>{
-    try{
-        const allowedUpdate = ['title','category', 'description','deliveryOption','pictures','youtubeVideo','websiteURL', 'location','price','phoneNumber','title']
-        const updates = Object.keys(req.body)
-        const isAllowedUpdate = updates.every((update)=>allowedUpdate.includes(update))
-        if(!isAllowedUpdate){
-            return res.send({error: 'Invalid updates'}).status(400)
-        }
-        const ad = await Ad.findOne({_id: req.params.id, postedBy: req.user._id})
-        if(!ad){
-            return res.status(404).send()
-        }
-        updates.forEach((update)=>ad[update]=req.body[update])
-        await ad.save()
-        res.send(ad)
-    }catch(e){
-        res.send(e).status(500)
+    res.send(ad);
+  } catch (e) {
+    res.send(e).status(500);
+  }
+};
+
+module.exports.get_ad_byCategoryId = async (req, res) => {
+  try {
+    const match = {};
+    const sort = {};
+    if (req.query.category) {
+      match.category = req.query.category;
     }
-}
-
-module.exports.delete_my_ads = async (req, res)=>{
-    try{
-        const ad = await Ad.findOneAndDelete({_id: req.params.id, postedBy: req.user._id})
-        if(!ad){
-            res.send().status(404)
-        }
-        res.send(ad)
-    }catch(e){
-        res.send(e).status(500)
+    if (req.query.location) {
+      match.location = req.query.location;
     }
-}
-
-module.exports.upload_ad_picture = async (req, res, next)=>{
-    try{
-        const fileURL = req.file.location;
-        console.log(fileURL);
-        const ad = await Ad.findOne({_id: req.params.id})
-       
-        if(!ad){
-            next({error: 'No Ad found'})
-        }
-      
-        ad.pictures.push({url: fileURL});
-        await ad.save();
-        res.send(ad)
-    }catch(error){
-        next(error)
+    if (req.query.sortBy) {
+      const parts = req.query.sortBy.split(":");
+      sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
     }
-}
 
-module.exports.show_ad_picture = async (req, res, next)=>{
-    try{
-        const ad = await Ad.findOne({_id:req.params.id})        
-        res.send({id: ad._id, pictures: ad.pictures})
+    const ad = await Ad.find({ category: req.params.id });
+    // await req.user.populate('ad').execPopulate()
 
-    }catch(error){
-        next(error)
+    res.send(ad);
+  } catch (e) {
+    res.send(e).status(500);
+  }
+};
+
+module.exports.update_my_ads = async (req, res) => {
+  try {
+    const allowedUpdate = [
+      "title",
+      "category",
+      "description",
+      "deliveryOption",
+      "pictures",
+      "youtubeVideo",
+      "websiteURL",
+      "location",
+      "price",
+      "phoneNumber",
+      "title",
+    ];
+    const updates = Object.keys(req.body);
+    const isAllowedUpdate = updates.every((update) =>
+      allowedUpdate.includes(update)
+    );
+    if (!isAllowedUpdate) {
+      return res.send({ error: "Invalid updates" }).status(400);
     }
-}
+    const ad = await Ad.findOne({ _id: req.params.id, postedBy: req.user._id });
+    if (!ad) {
+      return res.status(404).send();
+    }
+    updates.forEach((update) => (ad[update] = req.body[update]));
+    await ad.save();
+    res.send(ad);
+  } catch (e) {
+    res.send(e).status(500);
+  }
+};
+
+module.exports.delete_my_ads = async (req, res) => {
+  try {
+    const ad = await Ad.findOneAndDelete({
+      _id: req.params.id,
+      postedBy: req.user._id,
+    });
+    if (!ad) {
+      res.send().status(404);
+    }
+    res.send(ad);
+  } catch (e) {
+    res.send(e).status(500);
+  }
+};
+
+module.exports.upload_ad_picture = async (req, res, next) => {
+  try {
+    const fileURL = req.file.location;
+    console.log(fileURL);
+    const ad = await Ad.findOne({ _id: req.params.id });
+
+    if (!ad) {
+      next({ error: "No Ad found" });
+    }
+
+    ad.pictures.push({ url: fileURL });
+    await ad.save();
+    res.send(ad);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.show_ad_picture = async (req, res, next) => {
+  try {
+    const ad = await Ad.findOne({ _id: req.params.id });
+    res.send({ id: ad._id, pictures: ad.pictures });
+  } catch (error) {
+    next(error);
+  }
+};
