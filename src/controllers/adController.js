@@ -1,7 +1,7 @@
 /** @format */
 
 const sharp = require("sharp");
-
+const s3 = require('../middleware/s3');
 const Ad = require("../models/ad");
 module.exports.create_ads = async (req, res) => {
   try {
@@ -145,9 +145,25 @@ module.exports.update_my_ads = async (req, res) => {
   }
 };
 
-module.exports.delete_my_ads = async (req, res) => {
+module.exports.delete_my_ads = async (req, res, next) => {
   try {
-    const ad = await Ad.findOneAndDelete({
+    const pictures = [];
+    console.log(req.params.id, req.user._id);
+    const getAd = await Ad.findOne({
+      _id: req.params.id,
+      postedBy: req.user._id,
+    });
+    getAd.pictures.map((pic) => {
+      s3.destroyAdImage(pic.url.split('/').slice(-1)[0], function(err){
+        if(err){
+          return next(err)
+        }
+      })
+      //pictures.push(pic.url.split('/').slice(-1)[0]);
+    });
+    //console.log(pictures);
+
+    const ad = await Ad.findOne({
       _id: req.params.id,
       postedBy: req.user._id,
     });
