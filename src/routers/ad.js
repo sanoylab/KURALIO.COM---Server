@@ -65,30 +65,30 @@ var uploadPicture = multer({
   }),
 });
 //Create new ad
-router.post("/api/v1/ads", auth, create_ads);
+router.post("/", auth, create_ads);
 //Upload Ad picture
 router.post(
-  "/api/v1/ads/:id/picture",
+  "/:id/picture",
   auth,
   uploadPicture.single("picture"),
   upload_ad_picture
 );
 //Get Ad Picture
-router.get("/api/v1/ads/:id/picture", show_ad_picture);
+router.get("/:id/picture", show_ad_picture);
 //Get all ads
-router.get("/api/v1/ads", get_all_ads);
+router.get("/", get_all_ads);
 //Get my ads
-router.get("/api/v1/ads/me", auth, get_my_ads);
+router.get("/me", auth, get_my_ads);
 //Get ads by Id
-router.get("/api/v1/ads/:id", get_ad_byId);
+router.get("/:id", get_ad_byId);
 
 //Get ads by Category Id
-router.get("/api/v1/ads/category/:id", get_ad_byCategoryId);
+router.get("/category/:id", get_ad_byCategoryId);
 
 //Update my ad
-router.patch("/api/v1/ads/:id", auth, update_my_ads);
+router.patch("/:id", auth, update_my_ads);
 //Delete my ad
-router.delete("/api/v1/ads/:id", auth, delete_my_ads);
+router.delete("/:id", auth, delete_my_ads);
 
 module.exports = router;
 

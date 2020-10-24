@@ -4,7 +4,7 @@ const router = express.Router()
 const Category = require('../models/category')
 const multer = require('multer')
 
-router.post('/api/v1/categories', async (req, res)=>{
+router.post('/', async (req, res)=>{
     try{
         const category = new Category(req.body)
         if(!category){
@@ -17,7 +17,7 @@ router.post('/api/v1/categories', async (req, res)=>{
     }
 })
 
-router.get('/api/v1/categories', async (req, res)=>{
+router.get('/', async (req, res)=>{
     try{
         const categories = await Category.find({})
         res.send(categories)
@@ -28,7 +28,7 @@ router.get('/api/v1/categories', async (req, res)=>{
 
 const upload = multer();
 
-router.post('/api/v1/categories/:id', upload.single(), (req, res)=>{
+router.post('/:id', upload.single(), (req, res)=>{
 
 })
 

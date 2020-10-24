@@ -5,7 +5,7 @@ const auth = require('../middleware/auth')
 const Message = require('../models/message')
 
 
-router.post('/api/v1/messages/:id', auth, async (req, res)=>{
+router.post('/:id', auth, async (req, res)=>{
     try{
         
         const message = new Message(req.body)
@@ -18,7 +18,7 @@ router.post('/api/v1/messages/:id', auth, async (req, res)=>{
     }
 })
 
-router.get('/api/v1/messages',auth, async (req, res)=>{
+router.get('/messages',auth, async (req, res)=>{
     try{
         
         const sort ={}       
@@ -44,7 +44,7 @@ router.get('/api/v1/messages',auth, async (req, res)=>{
     }
 })
 
-router.delete('/api/v1/message/:id',auth, async(req, res)=>{
+router.delete('/message/:id',auth, async(req, res)=>{
     try{
         const msg = message.findOneAndDelete({_id: req.params.id, to: req.user._id})
         if(!msg){
