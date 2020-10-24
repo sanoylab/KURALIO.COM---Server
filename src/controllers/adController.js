@@ -163,7 +163,7 @@ module.exports.delete_my_ads = async (req, res, next) => {
     });
     //console.log(pictures);
 
-    const ad = await Ad.findOne({
+    const ad = await Ad.findByIdAndDelete({
       _id: req.params.id,
       postedBy: req.user._id,
     });
