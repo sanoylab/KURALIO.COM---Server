@@ -10,6 +10,10 @@ const categorySchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    isMenu: {
+        type: Boolean,
+        default: false
+    },
     status:{
         type: Boolean, 
         default: true
