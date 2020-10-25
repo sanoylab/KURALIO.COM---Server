@@ -1,4 +1,4 @@
-const sharp = require('sharp')
+///const sharp = require('sharp')
 const User = require('../models/user')
 const { sendWelcomeEmail, sendCancelEmail }  = require('../emails/account')
 const handleErrors = (err)=>{
@@ -92,12 +92,12 @@ module.exports.update_user = async (req, res) => {
 };
 
 module.exports.upload_userpicture = async (req, res) => {
-    const buffer = await sharp(req.file.buffer)
-      .png()
-      .resize({ width: 250, height: 250 })
-      .toBuffer();
+  //  const buffer = await sharp(req.file.buffer)
+//      .png()
+ //     .resize({ width: 250, height: 250 })
+ //     .toBuffer();
   
-    req.user.avatar = buffer;
+    req.user.avatar = req.file.buffer;// buffer;
     await req.user.save();
     res.send(req.user);
   }

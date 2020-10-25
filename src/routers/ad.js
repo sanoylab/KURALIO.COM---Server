@@ -3,12 +3,9 @@
 const express = require("express");
 const router = express.Router();
 
-const aws = require("aws-sdk");
-const multer = require("multer");
-const multerS3 = require("multer-s3");
-var sharp = require("sharp");
-
-
+const multer = require('multer');
+const s3Storage = require('multer-sharp-s3');
+const aws = require('aws-sdk');
 
 const Ad = require("../models/ad");
 const auth = require("../middleware/auth");
@@ -46,6 +43,17 @@ const s3 = new aws.S3();
 
 //     }
 // })
+const storage = s3Storage({
+  s3,
+  Bucket: process.env.BUKET_NAME,
+
+  ACL: "public-read",
+  // resize or any sharp options will ignore when uploading non image file type
+  resize: {
+    width: 100,
+    height: 100,
+  },
+});
 
 var uploadPicture = multer({
   limits: {
@@ -58,22 +66,7 @@ var uploadPicture = multer({
 
     cb(undefined, true);
   },
-  storage: multerS3({
-    acl: "public-read",
-    s3: s3,
-    bucket: process.env.BUKET_NAME,
-
-    metadata: function (req, file, cb) {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: function (req, file, cb) {
-      cb(null, Date.now().toString());
-    },
-    resize: {
-      width: 10,
-      height: 10,
-    },
-  }),
+  storage: storage,
 });
 
 //Create new ad
