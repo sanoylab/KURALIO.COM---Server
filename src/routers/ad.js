@@ -54,8 +54,8 @@ const storage = s3Storage({
   },
   // resize or any sharp options will ignore when uploading non image file type
   resize: {
-    width: 100,
-    height: 100,
+    width: 500,
+    height: 500,
   },
 });
 
