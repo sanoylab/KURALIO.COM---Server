@@ -14,7 +14,7 @@ const sendWelcomeEmail = (name, email) => {
         <table style="background-color: #fff;border-collapse:collapse; border: 1px;" width="90%" align="center">
         <tr>
         <td style="background-color: #373373; padding: 20px color: #fff;">
-        <img src="https://kuralio-ad-pictures.s3.ca-central-1.amazonaws.com/welcome.png" width="100%"></td></tr>
+        <img src="https://aradalej-assets.s3.eu-central-1.amazonaws.com/Screen+Shot+2020-10-25+at+6.53.00+PM.png" width="100%"></td></tr>
         <tr>
         <td style="font-size:20px; line-height:1.5; ">
         <p><strong>ሰላምታ ከአራዳ ልጅ የቁሳቁስ ማሻሻጫ ዌብ ሳይት ይድረሳችሁ</strong></p>
