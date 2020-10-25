@@ -48,6 +48,12 @@ const storage = s3Storage({
   Bucket: process.env.BUKET_NAME,
 
   ACL: "public-read",
+  metadata: function (req, file, cb) {
+    cb(null, { fieldName: file.fieldname });
+  },
+  key: function (req, file, cb) {
+    cb(null, Date.now().toString());
+  },
   // resize or any sharp options will ignore when uploading non image file type
   resize: {
     width: 100,
