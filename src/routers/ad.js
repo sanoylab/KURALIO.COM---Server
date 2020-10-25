@@ -48,9 +48,7 @@ const storage = s3Storage({
   Bucket: process.env.BUKET_NAME,
 
   ACL: "public-read",
-  withMetadata: function (req, file, cb) {
-    cb(null, { fieldName: file.fieldname });
-  },
+
   Key: function (req, file, cb) {
     cb(null, Date.now().toString());
   },

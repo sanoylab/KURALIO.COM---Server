@@ -177,7 +177,7 @@ module.exports.delete_my_ads = async (req, res, next) => {
 
 module.exports.upload_ad_picture = async (req, res, next) => {
   try {
-    const fileURL = req.file.location;
+    const fileURL = req.file;
     console.log('hello')
     console.log(req)
     const ad = await Ad.findOne({ _id: req.params.id });
