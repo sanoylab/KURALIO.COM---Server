@@ -1,6 +1,6 @@
 /** @format */
 
-const s3Config = require('../middleware/s3')
+const s3Config = require('../config/s3')
 const Ad = require("../models/ad");
 module.exports.create_ads = async (req, res) => {
   try {

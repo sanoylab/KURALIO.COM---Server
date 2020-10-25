@@ -1,23 +1,27 @@
+/** @format */
+
 ///const sharp = require('sharp')
-const User = require('../models/user')
-const { sendWelcomeEmail, sendCancelEmail }  = require('../emails/account')
-const handleErrors = (err)=>{
-    //console.log(err)
-    let error = {name: '', email: '', password: ''}
+const User = require("../models/user");
+const Ad = require("../models/ad");
+const s3Config = require("../config/s3");
 
-    if(err.code === 11000){
-        error.email = 'Email address is already registered'
-        return error
-    }
+const { sendWelcomeEmail, sendCancelEmail } = require("../emails/account");
+const handleErrors = (err) => {
+  //console.log(err)
+  let error = { name: "", email: "", password: "" };
 
-    if(err.message.includes('User validation failed')){
-        Object.values(err.errors).forEach(({properties})=>{
-            error[properties.path] = properties.message
-        })
-       
-    } 
-    return error
-}
+  if (err.code === 11000) {
+    error.email = "Email address is already registered";
+    return error;
+  }
+
+  if (err.message.includes("User validation failed")) {
+    Object.values(err.errors).forEach(({ properties }) => {
+      error[properties.path] = properties.message;
+    });
+  }
+  return error;
+};
 
 module.exports.create_user = async (req, res, next) => {
   try {
@@ -28,9 +32,9 @@ module.exports.create_user = async (req, res, next) => {
     res.send({ user, token }).status(200);
     //res.send({user}).status(201)
   } catch (err) {
-      //const errors = handleErrors(err)      
-      //res.send({errors}).status(400);
-      next(err)
+    //const errors = handleErrors(err)
+    //res.send({errors}).status(400);
+    next(err);
   }
 };
 module.exports.login_user = async (req, res) => {
@@ -93,15 +97,14 @@ module.exports.update_user = async (req, res) => {
 
 module.exports.upload_userpicture = async (req, res) => {
   //  const buffer = await sharp(req.file.buffer)
-//      .png()
- //     .resize({ width: 250, height: 250 })
- //     .toBuffer();
-  
-    req.user.avatar = req.file.buffer;// buffer;
-    await req.user.save();
-    res.send(req.user);
-  }
+  //      .png()
+  //     .resize({ width: 250, height: 250 })
+  //     .toBuffer();
 
+  req.user.avatar = req.file.buffer; // buffer;
+  await req.user.save();
+  res.send(req.user);
+};
 
 module.exports.get_userpicture = async (req, res) => {
   try {
@@ -124,9 +127,34 @@ module.exports.delete_userpicture = async (req, res) => {
     res.send(e).status(500);
   }
 };
-
-module.exports.delete_user = async (req, res) => {
+const deleteAds = async (_id) => {
   try {
+    await Ad.findOneAndDelete({ _id });
+  } catch (err) {
+    console.log(err);
+  }
+};
+module.exports.delete_user = async (req, res, next) => {
+  try {
+    const getAllMyAds = await Ad.find({
+      postedBy: req.user._id,
+    });
+   
+    getAllMyAds.map((ad) => {
+      ad.pictures.map((pic) => {
+        s3Config.destroyAdImage(pic.url.split("/").slice(-1)[0], function (
+          err
+        ) {
+          if (err) {
+            return next(err);
+          }
+        });
+      });
+      deleteAds(ad._id).then(() => {
+        console.log("Deleted");
+      });
+    });
+
     await req.user.remove();
     sendCancelEmail(req.user.name, req.user.email);
     res.send(req.user);
