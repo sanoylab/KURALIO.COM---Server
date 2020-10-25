@@ -34,14 +34,80 @@ const uploadAvatar = multer({
 });
 
 //creating new user route
+
+/**
+ * @swagger
+ * /user:
+ *   post:
+ *     tags:
+ *     - "User"
+ *     summary: "Create user"
+ *     description: "A new user can be registered using this endpoint"
+ *     operationId: "createUser"
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - in: "body"
+ *       name: "body"
+ *       description: "Created user object"
+ *       required: true
+ *     responses:
+ *       default:
+ *         description: "successful operation"
+ */
 router.post("/", create_user);
 //Login route
+/**
+ * @swagger
+ * /user/login:
+ *   get:
+ *     tags:
+ *       - "User"
+ *     summary: "Login User"
+ *     description: Login
+ *     response:
+ *       200:
+ *         description: Success
+ */
 router.post("/login", login_user);
 //Logout route
 router.post("/logout", auth, logout_user);
 //Show My User Profile
+/**
+ * @swagger
+ * /user:
+ *   get:
+ *     tags:
+ *       - "User"
+ *     summary: "User Profile"
+ *     description: Gets user profile
+ *     response:
+ *       200:
+ *         description: Success
+ */
 router.get("/", auth, profile_user);
 //Update User Profile
+
+/**
+ * @swagger
+ * /user:
+ *   put:
+ *     tags:
+ *     - "User"
+ *     summary: "Update user"
+ *     description: "A new user can be registered using this endpoint"
+ *     operationId: "createUser"
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - in: "body"
+ *       name: "body"
+ *       description: "Created user object"
+ *       required: true
+ *     responses:
+ *       default:
+ *         description: "successful operation"
+ */
 router.patch("/", auth, update_user);
 //Uploading Profile Picture
 router.post(
@@ -51,8 +117,42 @@ router.post(
   upload_userpicture
 );
 //Get Profile Picture
+//Show My User Profile
+/**
+ * @swagger
+ * /user:
+ *   get:
+ *     tags:
+ *       - "User"
+ *     summary: "User Profile Picture"
+ *     description: Gets user profile picture
+ *     response:
+ *       200:
+ *         description: Success
+ */
 router.get("/:id/avatar", get_userpicture);
 //Delete Profile Picture
+
+/**
+ * @swagger
+ * /user:
+ *   delete:
+ *     tags:
+ *     - "User"
+ *     summary: "Delete user"
+ *     description: "User deleted using this endpoint"
+ *     operationId: "createUser"
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - in: "body"
+ *       name: "body"
+ *       description: "Deleted user object"
+ *       required: true
+ *     responses:
+ *       default:
+ *         description: "successful operation"
+ */
 router.delete("/users/me/avatar", delete_userpicture);
 //Delete User Account
 router.delete("/", auth, delete_user);

@@ -16,7 +16,17 @@ router.post('/', async (req, res)=>{
         res.send(e).status(500)
     }
 })
-
+/**
+ * @swagger
+ * /categories:
+ *   get:
+ *     tags:
+ *       - "Category"
+ *     description: Gets all categories
+ *     response:
+ *       200:
+ *         description: Success
+ */
 router.get('/', async (req, res)=>{
     try{
         const categories = await Category.find({})
