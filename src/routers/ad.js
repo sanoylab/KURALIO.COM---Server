@@ -51,7 +51,7 @@ const storage = s3Storage({
   metadata: function (req, file, cb) {
     cb(null, { fieldName: file.fieldname });
   },
-  key: function (req, file, cb) {
+  Key: function (req, file, cb) {
     cb(null, Date.now().toString());
   },
   // resize or any sharp options will ignore when uploading non image file type
