@@ -1,7 +1,6 @@
 /** @format */
 
-const sharp = require("sharp");
-const s3 = require('../middleware/s3');
+
 const Ad = require("../models/ad");
 module.exports.create_ads = async (req, res) => {
   try {
@@ -179,7 +178,7 @@ module.exports.delete_my_ads = async (req, res, next) => {
 module.exports.upload_ad_picture = async (req, res, next) => {
   try {
     const fileURL = req.file.location;
-    console.log(fileURL);
+    
     const ad = await Ad.findOne({ _id: req.params.id });
 
     if (!ad) {

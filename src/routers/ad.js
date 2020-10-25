@@ -2,9 +2,14 @@
 
 const express = require("express");
 const router = express.Router();
+
 const aws = require("aws-sdk");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
+var sharp = require("sharp");
+
+
+
 const Ad = require("../models/ad");
 const auth = require("../middleware/auth");
 const {
@@ -50,6 +55,7 @@ var uploadPicture = multer({
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
       return cb(new Error("File type is not supported"));
     }
+
     cb(undefined, true);
   },
   storage: multerS3({
@@ -63,9 +69,12 @@ var uploadPicture = multer({
     key: function (req, file, cb) {
       cb(null, Date.now().toString());
     },
+    resize: {
+      width: 10,
+      height: 10,
+    },
   }),
 });
-
 
 //Create new ad
 router.post("/", auth, create_ads);
@@ -92,6 +101,6 @@ router.get("/category/:id", get_ad_byCategoryId);
 //Update my ad
 router.patch("/:id", auth, update_my_ads);
 //Delete my ad
-router.delete("/:id", auth,  delete_my_ads);
+router.delete("/:id", auth, delete_my_ads);
 
 module.exports = router;
