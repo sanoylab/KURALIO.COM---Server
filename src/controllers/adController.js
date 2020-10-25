@@ -1,6 +1,6 @@
 /** @format */
 
-
+const s3Config = require('../middleware/s3')
 const Ad = require("../models/ad");
 module.exports.create_ads = async (req, res) => {
   try {
@@ -146,14 +146,16 @@ module.exports.update_my_ads = async (req, res) => {
 
 module.exports.delete_my_ads = async (req, res, next) => {
   try {
-    const pictures = [];
+    
     console.log(req.params.id, req.user._id);
     const getAd = await Ad.findOne({
       _id: req.params.id,
       postedBy: req.user._id,
     });
+    
     getAd.pictures.map((pic) => {
-      s3.destroyAdImage(pic.url.split('/').slice(-1)[0], function(err){
+      
+      s3Config.destroyAdImage(pic.url.split('/').slice(-1)[0], function(err){
         if(err){
           return next(err)
         }

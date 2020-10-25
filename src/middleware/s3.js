@@ -3,7 +3,7 @@
 const aws = require("aws-sdk");
 
 require("dotenv").config();
-exports.destroyAdImage = function (filename, callback) {
+exports.destroyAdImage = function (filename, callback) {  
   aws.config.update({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
