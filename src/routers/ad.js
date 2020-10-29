@@ -3,9 +3,9 @@
 const express = require("express");
 const router = express.Router();
 
-const multer = require('multer');
-const s3Storage = require('multer-sharp-s3');
-const aws = require('aws-sdk');
+const multer = require("multer");
+const s3Storage = require("multer-sharp-s3");
+const aws = require("aws-sdk");
 
 const Ad = require("../models/ad");
 const auth = require("../middleware/auth");
@@ -54,8 +54,8 @@ const storage = s3Storage({
   },
   // resize or any sharp options will ignore when uploading non image file type
   resize: {
-    width: 500,
-    height: 500,
+    width: 7500,
+    height: 420,
   },
 });
 
