@@ -63,7 +63,8 @@ app.use("/api/v1", router);
 //app.use(categoryRouter)
 //app.use(adRouter)
 //app.use(messageRouter)
-app.use("/api/v1", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 app.use(errors.notFound);
 app.use(errors.errorHandler);
