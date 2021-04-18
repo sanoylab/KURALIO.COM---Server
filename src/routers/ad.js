@@ -28,6 +28,7 @@ aws.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   region: "ca-central-1",
 });
+
 const s3 = new aws.S3();
 
 // const uploadPicture = multer({
@@ -43,6 +44,7 @@ const s3 = new aws.S3();
 
 //     }
 // })
+
 const storage = s3Storage({
   s3,
   Bucket: process.env.BUKET_NAME,
@@ -73,26 +75,99 @@ var uploadPicture = multer({
   storage: storage,
 });
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Ad:
+ *       type: object
+ *       required:
+ *         - category
+ *         - title
+ *         - description
+ *         - deliveryOption
+ *         - pictures
+ *         - youtubeVideo
+ *         - websiteURL
+ *         - location
+ *         - price
+ *         - phoneNumber
+ *         - postedBy
+ *         - expiryDate
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the ad
+ *         category:
+ *           type: string
+ *           description: The ad category id
+ *         title:
+ *           type: string
+ *           description: Ad title
+ *         description:
+ *           type: string
+ *           description: Ad description
+ *         deliveryOption:
+ *           type: string
+ *           description: Delivery option
+ *         pictures:
+ *           type: string
+ *           description: Ad pictures
+ *         youtubeVideo:
+ *           type: string
+ *           description: YouTube URL
+ *         websiteURL:
+ *           type: string
+ *           description: Website URL
+ *         location:
+ *           type: string
+ *           description: Location name
+ *         price:
+ *           type: string
+ *           description: Price
+ *         phoneNumber:
+ *           type: string
+ *           description: Phone number
+ *         postedBy:
+ *           type: string
+ *           description: User Id
+ *         expiryDate:
+ *           type: date
+ *           description: Ad auto expiry date
+ *       example:
+ *         category: 5f2acc725c4e3e61af7d8206
+ *         title: My awesome ad title
+ *         description: description text
+ *         deliveryOption: Free delivery
+ *         pictures: ['PICTURE URL']
+ *         youtubeVideo: Youtube_URL
+ *         websiteURL: Website_URL
+ *         location: New York
+ *         price: 99.99 USD
+ *         phoneNumber: 999-999-9999
+ *         postedBy: 5f2acc725c4e3e61af7d8206
+ *         experyDate: 12/2/2021
+ */
+
+
 //Create new ad
 /**
  * @swagger
- * /ads:
+ * /api/v1/ads:
  *   post:
- *     tags:
- *     - "Ad"
- *     summary: "Create Ad"
- *     description: "A new ad can be registered using this endpoint"
- *     operationId: "createAd"
- *     produces:
- *     - "application/json"
- *     parameters:
- *     - in: "body"
- *       name: "body"
- *       description: "Created ad object"
+ *     summary: Create a new ad
+ *     tags: [Ad]
+ *     requestBody:
  *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Ad'
  *     responses:
- *       default:
- *         description: "successful operation"
+ *       200:
+ *         description: The ad was successfully created
+ *       500:
+ *         description: Some server error
  */
 router.post("/", auth, create_ads);
 
@@ -105,33 +180,43 @@ router.post(
 );
 //Get Ad Picture
 router.get("/:id/picture", show_ad_picture);
+
+
 //Get all ads
 /**
  * @swagger
- * /ads:
+ * /api/v1/ads:
  *   get:
- *     tags:
- *       - "Ad"
- *     summary: "Get All Ad"
- *     description: Get all ad
- *     response:
+ *     summary: Returns the list of all the ads
+ *     tags: [Ad]
+ *     responses:
  *       200:
- *         description: Success
+ *         description: The list of the ads
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Ad'
  */
 router.get("/", get_all_ads);
 //Get my ads
 
 /**
  * @swagger
- * /ads/me:
+ * /api/v1/ads/me:
  *   get:
- *     tags:
- *       - "Ad"
- *     summary: "Get My Ad"
- *     description: Get My ad
- *     response:
+ *     summary: Returns the list of my ads
+ *     tags: [Ad]
+ *     responses:
  *       200:
- *         description: Success
+ *         description: The list of my ads
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Ad'
  */
 
 router.get("/me", auth, get_my_ads);
@@ -139,30 +224,52 @@ router.get("/me", auth, get_my_ads);
 
 /**
  * @swagger
- * /ads/:id:
+ * /api/v1/ads/{id}:
  *   get:
- *     tags:
- *       - "Ad"
- *     summary: "Get Ad by ID"
- *     description: Get ad by Id
- *     response:
+ *     summary: Get the ad by id
+ *     tags: [Ad]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ad id
+ *     responses:
  *       200:
- *         description: Success
+ *         description: The ad description by id
+ *         contents:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Ad'
+ *       404:
+ *         description: The ad was not found
  */
 router.get("/:id", get_ad_byId);
 
 //Get ads by Category Id
 /**
  * @swagger
- * /ads/:categoryId:
+ * /api/v1/category/{categoryId}:
  *   get:
- *     tags:
- *       - "Ad"
- *     summary: "Get Ad by Category ID"
- *     description: Get ad by Category Id
- *     response:
+ *     summary: Get the ad by category id
+ *     tags: [Ad]
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The categry id
+ *     responses:
  *       200:
- *         description: Success
+ *         description: The ad description by category id
+ *         contents:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Ad'
+ *       404:
+ *         description: The ad was not found
  */
 router.get("/category/:id", get_ad_byCategoryId);
 

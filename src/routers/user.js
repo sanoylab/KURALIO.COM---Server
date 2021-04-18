@@ -32,6 +32,52 @@ const uploadAvatar = multer({
     cb(undefined, true);
   },
 });
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - name
+ *         - email
+ *         - password
+ *         - address
+ *          - kefleKetema
+ *          - woreda
+ *          - leyuBotaSeme
+ *          - geo
+ *            - lat
+ *            - long
+ *         - phoneNumber
+ *         - avatar 
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the company
+ *         name:
+ *           type: string
+ *           description: user name
+ *         email:
+ *           type: string
+ *           description: Email address
+ *         address:
+ *           type: string
+ *           description: Address
+ *         phoneNumber:
+ *           type: string
+ *           description: Phone number
+ *         avatar:
+ *           type: string
+ *           description: Avatar Image
+ *       example:
+ *         name: Yonas
+ *         email: abc@abc.com
+ *         address: New York
+ *         phoneNumber: 222-222-2222
+ */
+
+
 
 //creating new user route
 
@@ -59,7 +105,7 @@ router.post("/", create_user);
 //Login route
 /**
  * @swagger
- * /user/login:
+ * /api/v1/user/login:
  *   get:
  *     tags:
  *       - "User"
@@ -75,7 +121,7 @@ router.post("/logout", auth, logout_user);
 //Show My User Profile
 /**
  * @swagger
- * /user:
+ * /api/v1/user:
  *   get:
  *     tags:
  *       - "User"
@@ -90,7 +136,7 @@ router.get("/", auth, profile_user);
 
 /**
  * @swagger
- * /user:
+ * /api/v1/user:
  *   put:
  *     tags:
  *     - "User"
@@ -120,7 +166,7 @@ router.post(
 //Show My User Profile
 /**
  * @swagger
- * /user:
+ * /api/v1/user:
  *   get:
  *     tags:
  *       - "User"
@@ -135,7 +181,7 @@ router.get("/:id/avatar", get_userpicture);
 
 /**
  * @swagger
- * /user:
+ * /api/v1/user:
  *   delete:
  *     tags:
  *     - "User"

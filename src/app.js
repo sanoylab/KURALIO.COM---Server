@@ -20,6 +20,10 @@ const PORT = process.env.PORT;
 const router = require("./routers/index");
 
 const app = express();
+//App level middlewares
+app.use(cors());
+app.use(express.json());
+
 
 const options = {
   definition: {
@@ -42,21 +46,24 @@ const options = {
       servers: ["http://localhost:3000"],
     },
   },
+  servers: [
+    {
+        url: "https://kuralio.herokuapp.com",
+    },
+],
   apis: ["src/routers/*.js"],
 };
 
 const swaggerSpec = swaggerJsDoc(options);
 
-//App level middlewares
-app.use(cors());
-app.use(express.json());
+
 app.use("/api/v1", router);
 
 //app.use(userRouter)
 //app.use(categoryRouter)
 //app.use(adRouter)
 //app.use(messageRouter)
-app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api/v1", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(errors.notFound);
 app.use(errors.errorHandler);
